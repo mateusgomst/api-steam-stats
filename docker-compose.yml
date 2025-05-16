@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  APISTEAMSTATS:
+    container_name: db_api_steam_stats
+    image: postgres:17
+    environment:
+
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data: {}
