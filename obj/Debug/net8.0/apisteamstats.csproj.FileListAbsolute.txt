@@ -41,3 +41,4 @@
 /Users/mateusgomes/Documents/apisteamstats/obj/Debug/net8.0/apisteamstats.pdb
 /Users/mateusgomes/Documents/apisteamstats/obj/Debug/net8.0/apisteamstats.genruntimeconfig.cache
 /Users/mateusgomes/Documents/apisteamstats/obj/Debug/net8.0/ref/apisteamstats.dll
+/Users/mateusgomes/Documents/apisteamstats/obj/Debug/net8.0/apisteamstats.sourcelink.json

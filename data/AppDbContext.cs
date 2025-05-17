@@ -8,6 +8,5 @@ namespace APISTEAMSTATS.data
         public AppDbContext(DbContextOptions options) : base(options){}
         
         public DbSet<GameList> games {get; set;}
-    
     }
 }
