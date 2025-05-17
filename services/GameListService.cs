@@ -1,7 +1,7 @@
-using System.Net.Http;
 using System.Text.Json;
 using APISTEAMSTATS.data;
 using APISTEAMSTATS.models;
+using Microsoft.EntityFrameworkCore;
 
 namespace APISTEAMSTATS.services
 {
@@ -29,21 +29,25 @@ namespace APISTEAMSTATS.services
                 using JsonDocument doc = JsonDocument.Parse(responseBody);
                 JsonElement root = doc.RootElement;
 
+                await _appDbContext.Database.ExecuteSqlRawAsync("DELETE FROM games");
+
+                var gameList = new List<GameList>();
+
                 foreach (JsonProperty jogo in root.EnumerateObject())
                 {
                     var appid = jogo.Value.GetProperty("appid").GetInt32();
                     var name = jogo.Value.GetProperty("name").GetString();
 
-                    GameList game = new GameList
+                    gameList.Add(new GameList
                     {
                         appId = appid,
                         nameGame = name
-                    };
-
-                    _appDbContext.games.Add(game);
+                    });
                 }
 
+                _appDbContext.games.AddRange(gameList);
                 await _appDbContext.SaveChangesAsync();
+
             }
             catch (HttpRequestException e)
             {
