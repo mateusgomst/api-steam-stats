@@ -2,6 +2,7 @@
 using APISTEAMSTATS.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace apisteamstats.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250519110751_colunmPlayTime")]
+    partial class colunmPlayTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,11 +35,11 @@ namespace apisteamstats.Migrations
                     b.Property<int>("appId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("averagePlayTime")
+                        .HasColumnType("integer");
+
                     b.Property<string>("nameGame")
                         .HasColumnType("text");
-
-                    b.Property<int>("positive")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

@@ -23,23 +23,26 @@ namespace APISTEAMSTATS.services
             {
                 HttpResponseMessage response = await _httpClient.GetAsync(urlGetAllGames);
                 response.EnsureSuccessStatusCode();
-
+                
                 string responseBody = await response.Content.ReadAsStringAsync();
 
                 using JsonDocument doc = JsonDocument.Parse(responseBody);
                 JsonElement root = doc.RootElement;
 
                 await _appDbContext.Database.ExecuteSqlRawAsync("DELETE FROM games");
+                await _appDbContext.Database.ExecuteSqlRawAsync("TRUNCATE TABLE games RESTART IDENTITY");
 
                 var gameList = new List<GameList>();
 
                 foreach (JsonProperty jogo in root.EnumerateObject())
                 {
+                    var positive = jogo.Value.GetProperty("positive").GetInt32();
                     var appid = jogo.Value.GetProperty("appid").GetInt32();
                     var name = jogo.Value.GetProperty("name").GetString();
 
                     gameList.Add(new GameList
                     {
+                        positive = positive,
                         appId = appid,
                         nameGame = name
                     });
