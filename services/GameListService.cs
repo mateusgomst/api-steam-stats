@@ -28,7 +28,7 @@ namespace APISTEAMSTATS.services
 
                 using JsonDocument doc = JsonDocument.Parse(responseBody);
                 JsonElement root = doc.RootElement;
-
+                
                 await _appDbContext.Database.ExecuteSqlRawAsync("DELETE FROM games");
                 await _appDbContext.Database.ExecuteSqlRawAsync("TRUNCATE TABLE games RESTART IDENTITY");
 

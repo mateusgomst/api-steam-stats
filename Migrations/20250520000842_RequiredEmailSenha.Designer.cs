@@ -2,6 +2,7 @@
 using APISTEAMSTATS.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace apisteamstats.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250520000842_RequiredEmailSenha")]
+    partial class RequiredEmailSenha
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,14 +57,14 @@ namespace apisteamstats.Migrations
                     b.Property<int>("countListGames")
                         .HasColumnType("integer");
 
-                    b.Property<string>("login")
+                    b.Property<string>("email")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("name")
                         .HasColumnType("text");
 
-                    b.Property<string>("password")
+                    b.Property<string>("senha")
                         .IsRequired()
                         .HasColumnType("text");
 

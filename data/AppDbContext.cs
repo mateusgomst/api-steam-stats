@@ -5,8 +5,10 @@ namespace APISTEAMSTATS.data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions options) : base(options){}
-        
-        public DbSet<GameList> games {get; set;}
+        public AppDbContext(DbContextOptions options) : base(options) { }
+
+        public DbSet<GameList> games { get; set; }
+        public DbSet<User> users {get; set;}
+
     }
 }
