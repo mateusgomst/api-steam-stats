@@ -16,7 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connect
 
 // **Registra o GameListService no container de serviços**
 builder.Services.AddScoped<GameListService>();
-
+builder.Services.AddScoped<SteamSpyAcl>(); 
 var app = builder.Build();
 
 // Configura Swagger para ambiente de desenvolvimento

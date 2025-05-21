@@ -1,4 +1,5 @@
 using APISTEAMSTATS.data;
+using APISTEAMSTATS.models;
 
 namespace APISTEAMSTATS.services
 {
@@ -11,6 +12,17 @@ namespace APISTEAMSTATS.services
             _appDbContext = appDbContext;
         }
 
+        public async Task Register(User user)
+        {
+            
+            var userFound = await _appDbContext.users.FindAsync(user.login);
+            if (userFound != null)
+            {
+                throw new Exception("Usuario ja cadastrado");
+            }
+            
+
+        }
         
 
     }

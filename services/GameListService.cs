@@ -9,32 +9,33 @@ namespace APISTEAMSTATS.services
     {
         private readonly AppDbContext _appDbContext;
         private readonly HttpClient _httpClient;
+        private readonly SteamSpyAcl _steamSpyAcl;
         private string urlGetAllGames = "https://steamspy.com/api.php?request=all";
 
-        public GameListService(AppDbContext appDbContext)
+        public GameListService(AppDbContext appDbContext, SteamSpyAcl steamSpyAcl)
         {
             _appDbContext = appDbContext;
             _httpClient = new HttpClient();
+            _steamSpyAcl = steamSpyAcl;
         }
 
         public async Task GetAllGames()
         {
             try
             {
-                HttpResponseMessage response = await _httpClient.GetAsync(urlGetAllGames);
-                response.EnsureSuccessStatusCode();
+                //acl flurl
+                JsonElement allGames = await _steamSpyAcl.GetAllGames();
                 
-                string responseBody = await response.Content.ReadAsStringAsync();
+                //repository
+                await _appDbContext.Database.ExecuteSqlRawAsync("DELETE FROM games"); // alterar a logica para verificar 
+                // se tme um jogo novo, caso tenha adcione ele
 
-                using JsonDocument doc = JsonDocument.Parse(responseBody);
-                JsonElement root = doc.RootElement;
-                
-                await _appDbContext.Database.ExecuteSqlRawAsync("DELETE FROM games");
                 await _appDbContext.Database.ExecuteSqlRawAsync("TRUNCATE TABLE games RESTART IDENTITY");
 
                 var gameList = new List<GameList>();
 
-                foreach (JsonProperty jogo in root.EnumerateObject())
+                //service
+                foreach (JsonProperty jogo in allGames.EnumerateObject())
                 {
                     var positive = jogo.Value.GetProperty("positive").GetInt32();
                     var appid = jogo.Value.GetProperty("appid").GetInt32();
@@ -48,6 +49,7 @@ namespace APISTEAMSTATS.services
                     });
                 }
 
+                //repository
                 _appDbContext.games.AddRange(gameList);
                 await _appDbContext.SaveChangesAsync();
 
