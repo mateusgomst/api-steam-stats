@@ -13,19 +13,20 @@ namespace APISTEAMSTATS.services
             _userRepository = userRepository;
         }
 
-        public async Task<User> Register(User user)
+        public async Task<User?> Register(User user)
         {
-            
             var userFound = await _userRepository.FindUser(user);
             if (userFound != null)
             {
-                return userFound;
+                return null;
             }
-            
-            
-            return userFound;//so para sair o erro, tem q tirar dps
+            user.countListGames = 0;
+            user.password = BCrypt.Net.BCrypt.HashPassword(user.password);
+
+
+            await _userRepository.AddUser(user);
+            return user;
         }
         
-
     }
 }

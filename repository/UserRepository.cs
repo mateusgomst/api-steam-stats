@@ -1,5 +1,6 @@
 using APISTEAMSTATS.data;
 using APISTEAMSTATS.models;
+using Microsoft.EntityFrameworkCore; 
 
 namespace APISTEAMSTATS.repository
 {
@@ -14,8 +15,15 @@ namespace APISTEAMSTATS.repository
 
         public async Task<User?> FindUser(User user)
         {
-            var userFound = await _appDbContext.users.FindAsync(user.login);
+            var userFound = await _appDbContext.users.FirstOrDefaultAsync(u => u.login == user.login);
             return userFound;
+        }
+
+        public async Task<User?> AddUser(User user)
+        {
+            await _appDbContext.users.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+            return user;
         }
 
     }

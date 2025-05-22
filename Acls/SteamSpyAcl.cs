@@ -14,7 +14,7 @@ namespace APISTEAMSTATS.services
             _httpClient = new HttpClient();
         }
 
-        public async Task<JsonElement> GetAllGames()
+        public async Task<JsonDocument> GetAllGames()
         {
             try
             {
@@ -23,11 +23,9 @@ namespace APISTEAMSTATS.services
 
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                using JsonDocument doc = JsonDocument.Parse(responseBody);
+                JsonDocument doc = JsonDocument.Parse(responseBody);
 
-                JsonElement root = doc.RootElement;
-
-                return root;
+                return doc;
             }
             catch (HttpRequestException e)
             {

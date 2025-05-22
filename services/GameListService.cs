@@ -1,3 +1,4 @@
+// mateusgomst/api-steam-stats/api-steam-stats-58eda81b14f195b478fb9b734c20c963858ea007/services/GameListService.cs
 using System.Text.Json;
 using APISTEAMSTATS.data;
 using APISTEAMSTATS.models;
@@ -23,7 +24,8 @@ namespace APISTEAMSTATS.services
         {
             try
             {
-                JsonElement allGames = await _steamSpyAcl.GetAllGames();
+                using JsonDocument allGamesDocument = await _steamSpyAcl.GetAllGames();
+                JsonElement allGames = allGamesDocument.RootElement;
                 var gameList = new List<GameList>();
 
                 foreach (JsonProperty jogo in allGames.EnumerateObject())

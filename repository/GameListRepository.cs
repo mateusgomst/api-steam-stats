@@ -18,10 +18,14 @@ namespace APISTEAMSTATS.repository
             return existingGame;
         }
 
-        public async Task AddListInGames(List<GameList> gameList) {
+        public async Task AddListInGames(List<GameList> gameList)
+        {
             _appDbContext.games.AddRange(gameList);
             await _appDbContext.SaveChangesAsync();
         }
+
+
+
 
     }
 }
