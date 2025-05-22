@@ -1,27 +1,29 @@
 using APISTEAMSTATS.data;
 using APISTEAMSTATS.models;
+using APISTEAMSTATS.repository;
 
 namespace APISTEAMSTATS.services
 {
     public class UserService
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly UserRepository _userRepository;
 
-        public UserService(AppDbContext appDbContext)
+        public UserService(UserRepository userRepository)
         {
-            _appDbContext = appDbContext;
+            _userRepository = userRepository;
         }
 
-        public async Task Register(User user)
+        public async Task<User> Register(User user)
         {
             
-            var userFound = await _appDbContext.users.FindAsync(user.login);
+            var userFound = await _userRepository.FindUser(user);
             if (userFound != null)
             {
-                throw new Exception("Usuario ja cadastrado");
+                return userFound;
             }
             
-
+            
+            return userFound;//so para sair o erro, tem q tirar dps
         }
         
 
