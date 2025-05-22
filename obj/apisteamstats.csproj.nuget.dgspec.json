@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/mateusgomes/Documents/apisteamstats/apisteamstats.csproj": {}
+    "C:\\Users\\mateus.tcastro\\api-steam-stats\\apisteamstats.csproj": {}
   },
   "projects": {
-    "/Users/mateusgomes/Documents/apisteamstats/apisteamstats.csproj": {
+    "C:\\Users\\mateus.tcastro\\api-steam-stats\\apisteamstats.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mateusgomes/Documents/apisteamstats/apisteamstats.csproj",
+        "projectUniqueName": "C:\\Users\\mateus.tcastro\\api-steam-stats\\apisteamstats.csproj",
         "projectName": "apisteamstats",
-        "projectPath": "/Users/mateusgomes/Documents/apisteamstats/apisteamstats.csproj",
-        "packagesPath": "/Users/mateusgomes/.nuget/packages/",
-        "outputPath": "/Users/mateusgomes/Documents/apisteamstats/obj/",
+        "projectPath": "C:\\Users\\mateus.tcastro\\api-steam-stats\\apisteamstats.csproj",
+        "packagesPath": "C:\\Users\\mateus.tcastro\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mateus.tcastro\\api-steam-stats\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mateusgomes/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\mateus.tcastro\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -85,7 +85,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.409/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.409/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

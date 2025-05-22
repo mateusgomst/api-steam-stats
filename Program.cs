@@ -1,4 +1,5 @@
 using APISTEAMSTATS.data;
+using APISTEAMSTATS.repository;
 using APISTEAMSTATS.services;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connect
 
 // **Registra o GameListService no container de serviços**
 builder.Services.AddScoped<GameListService>();
-builder.Services.AddScoped<SteamSpyAcl>(); 
+builder.Services.AddScoped<SteamSpyAcl>();
+builder.Services.AddScoped < GameListRepository>();
 var app = builder.Build();
 
 // Configura Swagger para ambiente de desenvolvimento
