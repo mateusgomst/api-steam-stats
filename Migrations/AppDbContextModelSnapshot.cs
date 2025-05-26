@@ -32,7 +32,11 @@ namespace apisteamstats.Migrations
                     b.Property<int>("appId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("discount")
+                        .HasColumnType("integer");
+
                     b.Property<string>("nameGame")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("positive")
@@ -59,6 +63,7 @@ namespace apisteamstats.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("password")

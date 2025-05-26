@@ -1,4 +1,3 @@
-// mateusgomst/api-steam-stats/api-steam-stats-58eda81b14f195b478fb9b734c20c963858ea007/services/GameListService.cs
 using System.Text.Json;
 using APISTEAMSTATS.data;
 using APISTEAMSTATS.models;
@@ -19,39 +18,69 @@ namespace APISTEAMSTATS.services
             _steamSpyAcl = steamSpyAcl;
             _gameListRepository = gameListRepository;
         }
-
+        
         public async Task GetAllGames()
         {
             try
             {
                 using JsonDocument allGamesDocument = await _steamSpyAcl.GetAllGames();
                 JsonElement allGames = allGamesDocument.RootElement;
-                var gameList = new List<GameList>();
+
+                var newGames = new List<GameList>();
+                var gamesToUpdate = new List<GameList>();
+
+                // Busca jogos existentes e evita duplicatas por appId
+                var existingGames = await _gameListRepository.GetAllGames();
+                var existingGameDict = existingGames
+                    .GroupBy(g => g.appId)
+                    .Select(g => g.First())
+                    .ToDictionary(g => g.appId);
 
                 foreach (JsonProperty jogo in allGames.EnumerateObject())
                 {
-                    var positive = jogo.Value.GetProperty("positive").GetInt32();
                     var appid = jogo.Value.GetProperty("appid").GetInt32();
                     var name = jogo.Value.GetProperty("name").GetString();
+                    var positive = jogo.Value.GetProperty("positive").GetInt32();
+                    var discount = jogo.Value.GetProperty("discount").GetString();
+                    int discountInt = int.Parse(discount);
 
-                    var existingGame = await _gameListRepository.FindGameByAppid(appid);
 
-                    if (existingGame == null)
+                    if (existingGameDict.TryGetValue(appid, out var existingGame))
                     {
-                        gameList.Add(new GameList
+                        // Atualiza o desconto se mudou
+                        if (existingGame.discount != discountInt)
                         {
-                            positive = positive,
+                            existingGame.discount = discountInt;
+                            gamesToUpdate.Add(existingGame);
+                        }
+                    }
+                    else
+                    {
+                        // Adiciona novo jogo à lista
+                        newGames.Add(new GameList
+                        {
                             appId = appid,
-                            nameGame = name
+                            nameGame = name,
+                            positive = positive,
+                            discount = discountInt
                         });
                     }
                 }
-                await _gameListRepository.AddListInGames(gameList);
+
+                // Salva novos jogos no banco
+                if (newGames.Any())
+                    await _gameListRepository.AddListInGames(newGames);
+
+                // Atualiza descontos de jogos existentes
+                if (gamesToUpdate.Any())
+                    await _gameListRepository.UpdateGamesDiscount(gamesToUpdate);
             }
             catch (HttpRequestException e)
             {
                 throw new Exception("Erro ao obter jogos da API SteamSpy: " + e.Message);
             }
         }
+
+
     }
 }

@@ -131,3 +131,11 @@ C:/Users/mateus.tcastro/api-steam-stats/obj/Debug/net8.0/ref/apisteamstats.dll
 /Users/mateusgomes/api-steam-stats/obj/Debug/net8.0/apisteamstats.genruntimeconfig.cache
 /Users/mateusgomes/api-steam-stats/obj/Debug/net8.0/ref/apisteamstats.dll
 /Users/mateusgomes/api-steam-stats/bin/Debug/net8.0/BCrypt.Net-Core.dll
+/Users/mateusgomes/api-steam-stats/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/mateusgomes/api-steam-stats/bin/Debug/net8.0/Microsoft.IdentityModel.Abstractions.dll
+/Users/mateusgomes/api-steam-stats/bin/Debug/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/Users/mateusgomes/api-steam-stats/bin/Debug/net8.0/Microsoft.IdentityModel.Logging.dll
+/Users/mateusgomes/api-steam-stats/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.dll
+/Users/mateusgomes/api-steam-stats/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/Users/mateusgomes/api-steam-stats/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
+/Users/mateusgomes/api-steam-stats/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll

@@ -1,5 +1,6 @@
 using APISTEAMSTATS.data;
 using APISTEAMSTATS.models;
+using Microsoft.EntityFrameworkCore;
 
 namespace APISTEAMSTATS.repository
 {
@@ -12,6 +13,18 @@ namespace APISTEAMSTATS.repository
             _appDbContext = appDbContext;
         }
 
+        public async Task<List<GameList>> GetAllGames()
+        {
+            List<GameList> gameList = await _appDbContext.games.ToListAsync();
+            return gameList;
+        }
+    
+        public async Task UpdateGamesDiscount(List<GameList> gamesToUpdate)
+        {
+            _appDbContext.games.UpdateRange(gamesToUpdate);
+            await _appDbContext.SaveChangesAsync();
+        }
+        
         public async Task<GameList?> FindGameByAppid(int appid)
         {
             var existingGame = await _appDbContext.games.FindAsync(appid);

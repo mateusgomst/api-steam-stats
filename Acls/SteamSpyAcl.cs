@@ -1,8 +1,8 @@
 using System.Text.Json;
 using APISTEAMSTATS.data;
 
-namespace APISTEAMSTATS.services
-{
+namespace APISTEAMSTATS.services;
+
     public class SteamSpyAcl
     {
         
@@ -33,4 +33,3 @@ namespace APISTEAMSTATS.services
             }
         }
     }
-}
