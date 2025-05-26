@@ -28,5 +28,24 @@ namespace APISTEAMSTATS.services
             return user;
         }
         
+        public async Task<User?> Login(User user)
+        {
+            var userFound = await _userRepository.FindUser(user);
+            if (userFound == null)
+            {
+                return null;
+            }
+            user.Id=userFound.Id;
+            
+            bool success = BCrypt.Net.BCrypt.Verify(user.password, userFound.password);
+            if (!success)
+            {
+                return null;
+            }
+            return user;
+        }
+        
+        
+        
     }
 }
