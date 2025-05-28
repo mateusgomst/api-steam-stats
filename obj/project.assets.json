@@ -1864,11 +1864,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/mateusgomes/api-steam-stats/apisteamstats.csproj",
+      "projectUniqueName": "/Users/mateusgomes/Documents/api-steam-stats/apisteamstats.csproj",
       "projectName": "apisteamstats",
-      "projectPath": "/Users/mateusgomes/api-steam-stats/apisteamstats.csproj",
+      "projectPath": "/Users/mateusgomes/Documents/api-steam-stats/apisteamstats.csproj",
       "packagesPath": "/Users/mateusgomes/.nuget/packages/",
-      "outputPath": "/Users/mateusgomes/api-steam-stats/obj/",
+      "outputPath": "/Users/mateusgomes/Documents/api-steam-stats/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/mateusgomes/.nuget/NuGet/NuGet.Config"

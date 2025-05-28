@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LfMQ5tZuSEo=",
+  "dgSpecHash": "xtGq4khweS0=",
   "success": true,
-  "projectFilePath": "/Users/mateusgomes/api-steam-stats/apisteamstats.csproj",
+  "projectFilePath": "/Users/mateusgomes/Documents/api-steam-stats/apisteamstats.csproj",
   "expectedPackageFiles": [
     "/Users/mateusgomes/.nuget/packages/bcrypt.net-core/1.6.0/bcrypt.net-core.1.6.0.nupkg.sha512",
     "/Users/mateusgomes/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",

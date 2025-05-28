@@ -25,6 +25,8 @@ builder.Services.AddScoped<GameListRepository>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<WishListService>();
+builder.Services.AddScoped<WishListRepository>();
 
 // Configura JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");

@@ -74,6 +74,32 @@ namespace apisteamstats.Migrations
 
                     b.ToTable("users");
                 });
+
+            modelBuilder.Entity("APISTEAMSTATS.models.WishList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("discount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("idGame")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("nameGame")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("wishlists");
+                });
 #pragma warning restore 612, 618
         }
     }
