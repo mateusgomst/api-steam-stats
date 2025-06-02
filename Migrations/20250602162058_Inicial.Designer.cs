@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace apisteamstats.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250520001011_fixNames")]
-    partial class fixNames
+    [Migration("20250602162058_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,7 +35,11 @@ namespace apisteamstats.Migrations
                     b.Property<int>("appId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("discount")
+                        .HasColumnType("integer");
+
                     b.Property<string>("nameGame")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("positive")
@@ -62,6 +66,7 @@ namespace apisteamstats.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("password")
@@ -71,6 +76,32 @@ namespace apisteamstats.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("users");
+                });
+
+            modelBuilder.Entity("APISTEAMSTATS.models.WishList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("discount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("idGame")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("nameGame")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("wishlists");
                 });
 #pragma warning restore 612, 618
         }
