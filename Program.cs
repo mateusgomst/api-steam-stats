@@ -28,6 +28,7 @@ builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<WishListService>();
 builder.Services.AddScoped<WishListRepository>();
 builder.Services.AddScoped<DailyTaskService>();
+builder.Services.AddScoped<EmailAcl>();
 
 // Configura JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");

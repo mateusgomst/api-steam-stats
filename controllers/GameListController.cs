@@ -9,10 +9,12 @@ namespace APISTEAMSTATS.controllers
     public class GamesController : ControllerBase
     {
         private readonly GameListService _gameListService;
+        private readonly DailyTaskService _dailyTaskService;
 
-        public GamesController(GameListService gameListService)
+        public GamesController(GameListService gameListService, DailyTaskService dailyTaskService)
         {
             _gameListService = gameListService;
+            _dailyTaskService = dailyTaskService;
         }
 
         [HttpPost]
@@ -27,6 +29,13 @@ namespace APISTEAMSTATS.controllers
         {
             List<GameList> games = await _gameListService.GetAllGames();
             return games;
+        }
+
+        [HttpGet("teste")]
+        public async Task<IActionResult> testeEmail()
+        {
+            await _dailyTaskService.ExecuteDailyTask();
+            return Ok();
         }
 
     }

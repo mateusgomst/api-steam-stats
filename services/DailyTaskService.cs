@@ -1,42 +1,58 @@
 ﻿using APISTEAMSTATS.models;
 using APISTEAMSTATS.repository;
-
-namespace APISTEAMSTATS.services;
+using APISTEAMSTATS.services;
 
 public class DailyTaskService
 {
     private readonly GameListService _gameListService;
     private readonly WishListRepository _wishListRepository;
     private readonly GameListRepository _gameListRepository;
-    
-    public DailyTaskService(GameListService gameListService, WishListRepository wishListRepository,GameListRepository gameListRepository)
+    private readonly EmailAcl _emailAcl;
+    private readonly UserRepository _userRepository;
+
+    public DailyTaskService(GameListService gameListService, WishListRepository wishListRepository,
+                            GameListRepository gameListRepository, EmailAcl emailAcl, UserRepository userRepository)
     {
         _gameListService = gameListService;
         _wishListRepository = wishListRepository;
         _gameListRepository = gameListRepository;
+        _emailAcl = emailAcl;
+        _userRepository = userRepository;
     }
 
-    public async Task<bool> Task()
+    public async Task ExecuteDailyTask()
     {
-        await _gameListService.UploadAllGames();
-        
-        List<WishList> wishList = await _wishListRepository.GetAllWishList();
-
-        foreach (WishList wish in wishList)
+        try
         {
-            int appId = wish.idGame;
-            int discount = wish.discount;
+            //wait _gameListService.UploadAllGames();
+            List<WishList> wishList = await _wishListRepository.GetAllWishList();
 
-            GameList game = await _gameListRepository.FindGameByAppidPrimaryKey(appId);
-            
-            if (discount < game.discount)
+            foreach (WishList wish in wishList)
             {
-                Console.WriteLine("Notificado");
-                return true;
-            }
-            
-        }
+                int appId = wish.idGame;
+                int wishDiscount = wish.discount;
 
-        return false;
+                GameList game = await _gameListRepository.FindGameByAppidPrimaryKey(appId);
+
+                if (game.discount > wishDiscount)
+                {
+                    User user = await _userRepository.FindUserById(wish.userId);
+                     
+                    await _emailAcl.SendPromotionEmail(
+                        toEmail: user.login, 
+                        gameName: game.nameGame,
+                        discount: game.discount
+                    );
+                            
+                    Console.WriteLine("E-mail enviado com sucesso!");
+                       
+                }
+                    
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro na execução da tarefa diária: {ex.Message}");
+        }
     }
 }
