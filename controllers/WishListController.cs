@@ -9,7 +9,7 @@ namespace APISTEAMSTATS.controllers
 {
     [ApiController]
     [Route("wishlist")]
-    
+
     public class WishListController : ControllerBase
     {
         private readonly WishListService _wishListService;
@@ -18,17 +18,34 @@ namespace APISTEAMSTATS.controllers
         {
             _wishListService = wishListService;
         }
-        
+
         [Authorize]
-        [HttpPost("addwish")]
+        [HttpPost()]
         public async Task<IActionResult> AddWish(GameList game)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                          ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
             int id = int.Parse(userId);
-            await _wishListService.AddGame(id, game);
+            bool addGame = Convert.ToBoolean(await _wishListService.AddGame(id, game));
+
+            if (!addGame) return NotFound("Jogo não encontrado ou Este jogo já está na sua WishList ou Voce atingiu o limite de jogos na sua WishList");
+
             return Ok();
         }
+        
+        [Authorize]
+        [HttpDelete("{appId}")]
+        public async Task<IActionResult> RemoveWishList(int appId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                        ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            int id = int.Parse(userId);
+
+            await _wishListService.RemoveGame(id, appId);
+
+            return Ok();
+        }
+
         
             
         

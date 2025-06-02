@@ -25,12 +25,13 @@ namespace APISTEAMSTATS.repository
             await _appDbContext.SaveChangesAsync();
         }
         
-        public async Task<GameList?> FindGameByAppid(int appid)
+        public async Task<GameList?> FindGameByAppidPrimaryKey(int appid)
         {
-            var existingGame = await _appDbContext.games.FindAsync(appid);
+            var existingGame = await _appDbContext.games
+                .FirstOrDefaultAsync(g => g.appId == appid);
             return existingGame;
         }
-
+        
         public async Task AddListInGames(List<GameList> gameList)
         {
             _appDbContext.games.AddRange(gameList);

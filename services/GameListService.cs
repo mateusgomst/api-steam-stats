@@ -19,7 +19,7 @@ namespace APISTEAMSTATS.services
             _gameListRepository = gameListRepository;
         }
         
-        public async Task GetAllGames()
+        public async Task UploadAllGames()
         {
             try
             {
@@ -81,6 +81,10 @@ namespace APISTEAMSTATS.services
             }
         }
 
+        public async Task<List<GameList>> GetAllGames()
+        {
+            return await _gameListRepository.GetAllGames();
+        }
 
     }
 }

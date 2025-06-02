@@ -19,6 +19,13 @@ public class WishListRepository
         await _appDbContext.SaveChangesAsync();
     }
     
+    public async Task<WishList?> Add(int appid, int userid)
+    {
+        return await _appDbContext.wishlists
+            .FirstOrDefaultAsync(w => w.idGame == appid && w.userId == userid);
+    }
+
+
     public async Task<WishList?> FindByUserIdAndAppId(int userId, int appId)
     {
         return await _appDbContext.wishlists
@@ -29,6 +36,11 @@ public class WishListRepository
     {
         _appDbContext.wishlists.Remove(wishlist);
         await _appDbContext.SaveChangesAsync();
+    }
+
+    public async Task<List<WishList>> GetAllWishList()
+    {
+        return await _appDbContext.wishlists.ToListAsync();
     }
 
     
