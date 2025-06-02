@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "cEQmqwP5c30s4qCH0WyI1j9i1Ch+E0zYUCTVXa6V6qo=",
+  "Source": "apisteamstats",
+  "BasePath": "_content/apisteamstats",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
