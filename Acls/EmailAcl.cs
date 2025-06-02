@@ -8,7 +8,7 @@ public class EmailAcl
 {
     private readonly HttpClient _httpClient;
     private const string ApiUrl = "https://api.mailersend.com/v1/email";
-    private const string ApiToken = "mlsn.918f8c0e05c515ccd8b4c3ef6c09e9413fc4e0aae8b7d5296f0112f1221f639b";
+    private const string ApiToken = "";
 
     public EmailAcl()
     {
