@@ -13,18 +13,11 @@ public class WishListRepository
         _appDbContext = appDbContext;
     }
 
-    public async Task add(WishList wishlist)
+    public async Task Add(WishList wishlist)
     {
         await _appDbContext.wishlists.AddAsync(wishlist);
         await _appDbContext.SaveChangesAsync();
     }
-    
-    public async Task<WishList?> Add(int appid, int userid)
-    {
-        return await _appDbContext.wishlists
-            .FirstOrDefaultAsync(w => w.idGame == appid && w.userId == userid);
-    }
-
 
     public async Task<WishList?> FindByUserIdAndAppId(int userId, int appId)
     {

@@ -39,6 +39,12 @@ namespace APISTEAMSTATS.repository
             await _appDbContext.SaveChangesAsync();
         }
 
+        public async Task DecrementCountListGameByUserId(int userId)
+        {
+            var user = await _appDbContext.users.FirstOrDefaultAsync(u => u.Id == userId);
+            user.countListGames -= 1;
+            await _appDbContext.SaveChangesAsync();
+        }
 
     }
 }

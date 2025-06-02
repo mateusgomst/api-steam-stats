@@ -40,7 +40,7 @@ namespace APISTEAMSTATS.controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                         ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
             int id = int.Parse(userId);
-
+            
             await _wishListService.RemoveGame(id, appId);
 
             return Ok();

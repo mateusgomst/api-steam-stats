@@ -27,8 +27,8 @@ public class WishListService
         }
 
         User user = await _userRepository.FindUserById(userid);
-        
-        WishList wishList = await _wishListRepository.FindByUserIdAndAppId(game.appId, userid);
+
+        WishList wishList = await _wishListRepository.FindByUserIdAndAppId(userid, game.appId);
 
         //tratar jogo repetido
         if (wishList != null)
@@ -50,7 +50,7 @@ public class WishListService
             discount = 0
         };
 
-        await _wishListRepository.add(wishlist);
+        await _wishListRepository.Add(wishlist);
         await _userRepository.IncrementCountListGameByUserId(userid);
         return true;
         //userId, nameGame, appId, discount
@@ -59,9 +59,8 @@ public class WishListService
     public async Task RemoveGame(int userId, int appId)
     {
         var wishListItem = await _wishListRepository.FindByUserIdAndAppId(userId, appId);
-        if (wishListItem == null)
-            throw new Exception("Jogo não encontrado na wishlist.");
-
+        if (wishListItem == null) throw new Exception("Jogo não encontrado na wishlist.");
+        await _userRepository.DecrementCountListGameByUserId(userId);
         await _wishListRepository.Remove(wishListItem);
     }
 
