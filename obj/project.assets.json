@@ -1859,19 +1859,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\lcas_\\.nuget\\packages\\": {}
+    "C:\\Users\\mateu\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lcas_\\OneDrive\\Área de Trabalho\\api-steam-stats-main\\apisteamstats.csproj",
+      "projectUniqueName": "C:\\Users\\mateu\\Documents\\api-steam-stats-main\\apisteamstats.csproj",
       "projectName": "apisteamstats",
-      "projectPath": "C:\\Users\\lcas_\\OneDrive\\Área de Trabalho\\api-steam-stats-main\\apisteamstats.csproj",
-      "packagesPath": "C:\\Users\\lcas_\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lcas_\\OneDrive\\Área de Trabalho\\api-steam-stats-main\\obj\\",
+      "projectPath": "C:\\Users\\mateu\\Documents\\api-steam-stats-main\\apisteamstats.csproj",
+      "packagesPath": "C:\\Users\\mateu\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\mateu\\Documents\\api-steam-stats-main\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\lcas_\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\mateu\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
