@@ -26,9 +26,9 @@ namespace APISTEAMSTATS.controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                          ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
             int id = int.Parse(userId);
-            bool addGame = Convert.ToBoolean(await _wishListService.AddGame(id, game));
+            string addGame =await _wishListService.AddGame(id, game);
 
-            if (!addGame) return NotFound("Jogo não encontrado ou Este jogo já está na sua WishList ou Voce atingiu o limite de jogos na sua WishList");
+            if (addGame != "") return NotFound(addGame);
 
             return Ok();
         }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("apisteamstats")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9108917c62bc5db357bcbe5dc5fc75d48949aead")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c50ace4780a413e0ee92d0ab06628e42ff1a0cb")]
 [assembly: System.Reflection.AssemblyProductAttribute("apisteamstats")]
 [assembly: System.Reflection.AssemblyTitleAttribute("apisteamstats")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

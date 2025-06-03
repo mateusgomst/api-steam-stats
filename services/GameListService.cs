@@ -85,6 +85,5 @@ namespace APISTEAMSTATS.services
         {
             return await _gameListRepository.GetAllGames();
         }
-
     }
 }

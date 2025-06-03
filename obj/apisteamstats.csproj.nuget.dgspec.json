@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mateus.tcastro\\Documents\\api-steam-stats\\apisteamstats.csproj": {}
+    "C:\\Users\\mateu\\Documents\\api-steam-stats\\apisteamstats.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mateus.tcastro\\Documents\\api-steam-stats\\apisteamstats.csproj": {
+    "C:\\Users\\mateu\\Documents\\api-steam-stats\\apisteamstats.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mateus.tcastro\\Documents\\api-steam-stats\\apisteamstats.csproj",
+        "projectUniqueName": "C:\\Users\\mateu\\Documents\\api-steam-stats\\apisteamstats.csproj",
         "projectName": "apisteamstats",
-        "projectPath": "C:\\Users\\mateus.tcastro\\Documents\\api-steam-stats\\apisteamstats.csproj",
-        "packagesPath": "C:\\Users\\mateus.tcastro\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mateus.tcastro\\Documents\\api-steam-stats\\obj\\",
+        "projectPath": "C:\\Users\\mateu\\Documents\\api-steam-stats\\apisteamstats.csproj",
+        "packagesPath": "C:\\Users\\mateu\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mateu\\Documents\\api-steam-stats\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\mateus.tcastro\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\mateu\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -69,6 +69,14 @@
               "target": "Package",
               "version": "[7.0.18, )"
             },
+            "Quartz": {
+              "target": "Package",
+              "version": "[3.14.0, )"
+            },
+            "Quartz.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[3.14.0, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.6.2, )"
@@ -97,7 +105,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.409/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

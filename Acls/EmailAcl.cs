@@ -8,7 +8,7 @@ public class EmailAcl
 {
     private readonly HttpClient _httpClient;
     private const string ApiUrl = "https://api.mailersend.com/v1/email";
-    private const string ApiToken = "";
+    private const string ApiToken = "mlsn.918f8c0e05c515ccd8b4c3ef6c09e9413fc4e0aae8b7d5296f0112f1221f639b";
 
     public EmailAcl()
     {
@@ -17,7 +17,7 @@ public class EmailAcl
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiToken);
     }
 
-    public async Task SendPromotionEmail(string toEmail, string gameName, int discount)
+    public async Task SendPromotionEmail(string toEmail, string gameName, int discount, int appid)
     {
         var emailContent = new
         {
@@ -38,7 +38,7 @@ public class EmailAcl
                 <h2 style='color: #333;'>🎮 Promoção na sua Lista de Desejos!</h2>
                 <p style='font-size: 16px; color: #555;'>O jogo <strong>{gameName}</strong> está com um super desconto de <strong style='color: #28a745;'>{discount}%</strong>!</p>
                 <p style='font-size: 15px; color: #555;'>Aproveite a oferta antes que acabe!</p>
-                <a href='https://store.steampowered.com/app/{gameName}' target='_blank' style='display: inline-block; margin-top: 20px; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;'>Ver jogo na Steam</a>
+                <a href='https://store.steampowered.com/app/{appid}' target='_blank' style='display: inline-block; margin-top: 20px; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;'>Ver jogo na Steam</a>
                 <p style='font-size: 12px; color: #999; margin-top: 30px;'>Você está recebendo este e-mail porque adicionou este jogo à sua lista de desejos no Steam Stats.</p>
             </div>"
 

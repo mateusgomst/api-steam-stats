@@ -16,14 +16,14 @@ public class WishListService
         _userRepository = userRepository;
     }
 
-    public async Task<bool?> AddGame(int userid, GameList game)
+    public async Task<string> AddGame(int userid, GameList game)
     {
 
         // ver se o jogo que vai ser adicionado existe na gameList
         GameList findGame = await _gameListRepository.FindGameByAppidPrimaryKey(game.appId);
         if (findGame == null)
         {
-            return null; 
+            return "Jogo não existe!"; 
         }
 
         User user = await _userRepository.FindUserById(userid);
@@ -33,13 +33,13 @@ public class WishListService
         //tratar jogo repetido
         if (wishList != null)
         {
-            return null;
+            return "Esse jogo ja foi adcionado na sua WishList";
         }
         
         //tratar limite de jogos na wishlist
         if (user.countListGames >= 10)
         {
-            return null;
+            return "Você atingiu o limite de jogos na WishList!";
         }
 
         WishList wishlist = new WishList
@@ -52,8 +52,7 @@ public class WishListService
 
         await _wishListRepository.Add(wishlist);
         await _userRepository.IncrementCountListGameByUserId(userid);
-        return true;
-        //userId, nameGame, appId, discount
+        return "";
     }
      
     public async Task RemoveGame(int userId, int appId)

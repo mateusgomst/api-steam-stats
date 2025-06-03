@@ -31,12 +31,5 @@ namespace APISTEAMSTATS.controllers
             return games;
         }
 
-        [HttpGet("teste")]
-        public async Task<IActionResult> testeEmail()
-        {
-            await _dailyTaskService.ExecuteDailyTask();
-            return Ok();
-        }
-
     }
 }

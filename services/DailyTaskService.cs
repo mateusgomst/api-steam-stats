@@ -24,7 +24,7 @@ public class DailyTaskService
     {
         try
         {
-            //wait _gameListService.UploadAllGames();
+            await _gameListService.UploadAllGames();
             List<WishList> wishList = await _wishListRepository.GetAllWishList();
 
             foreach (WishList wish in wishList)
@@ -41,7 +41,8 @@ public class DailyTaskService
                     await _emailAcl.SendPromotionEmail(
                         toEmail: user.login, 
                         gameName: game.nameGame,
-                        discount: game.discount
+                        discount: game.discount,
+                        game.appId
                     );
                             
                     Console.WriteLine("E-mail enviado com sucesso!");
