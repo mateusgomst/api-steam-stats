@@ -17,19 +17,22 @@ namespace APISTEAMSTATS.controllers
             _dailyTaskService = dailyTaskService;
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public async Task<IActionResult> UploadGames()
         {
-            await _gameListService.GetAllGames();
-            return Ok("Jogos carregados!");
-        }
+            bool success = await _gameListService.UploadAllGames();
 
+            if (success)
+                return Ok("Jogos carregados com sucesso!");
+            else
+                return StatusCode(500, "Falha ao carregar os jogos.");
+        }
+*/
         [HttpGet]
-        public async Task<List<GameList>> GameList()
+        public async Task<ActionResult<List<GameList>>> GameList()
         {
-            List<GameList> games = await _gameListService.GetAllGames();
-            return games;
+            var games = await _gameListService.GetAllGames();
+            return Ok(games);
         }
-
     }
 }

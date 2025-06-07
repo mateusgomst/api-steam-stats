@@ -8,11 +8,9 @@ namespace APISTEAMSTATS.models
 
         public string name { get; set; }
 
-        [Required]
-        public string login { get; set; }
+        [Required] public string login { get; set; }
 
-        [Required]
-        public string password { get; set; }
+        [Required] public string password { get; set; }
 
         public int countListGames { get; set; }
     }

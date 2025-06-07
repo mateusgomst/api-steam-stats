@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -8,7 +9,7 @@ public class EmailAcl
 {
     private readonly HttpClient _httpClient;
     private const string ApiUrl = "https://api.mailersend.com/v1/email";
-    private const string ApiToken = "";
+    private const string ApiToken = "mlsn.918f8c0e05c515ccd8b4c3ef6c09e9413fc4e0aae8b7d5296f0112f1221f639b";
 
     public EmailAcl()
     {
@@ -17,16 +18,19 @@ public class EmailAcl
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiToken);
     }
 
-    public async Task SendPromotionEmail(string toEmail, string gameName, int discount, int appid)
+    public async Task<(bool Success, string ErrorMessage)> SendPromotionEmail(string toEmail, string gameName, int discount, int appid)
     {
         var emailContent = new
         {
-            from = new {
+            from = new
+            {
                 email = "steamstats@test-2p0347z82r7lzdrn.mlsender.net",
                 name = "Steam Stats Notifier"
             },
-            to = new[] {
-                new {
+            to = new[]
+            {
+                new
+                {
                     email = toEmail,
                     name = "Usuário"
                 }
@@ -41,25 +45,38 @@ public class EmailAcl
                 <a href='https://store.steampowered.com/app/{appid}' target='_blank' style='display: inline-block; margin-top: 20px; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;'>Ver jogo na Steam</a>
                 <p style='font-size: 12px; color: #999; margin-top: 30px;'>Você está recebendo este e-mail porque adicionou este jogo à sua lista de desejos no Steam Stats.</p>
             </div>"
-
         };
 
-        string json = JsonSerializer.Serialize(emailContent);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-        var response = await _httpClient.PostAsync(ApiUrl, content);
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            string responseContent = await response.Content.ReadAsStringAsync();
-            throw new Exception($"Erro ao enviar email: {response.StatusCode} - {responseContent}");
+            string json = JsonSerializer.Serialize(emailContent);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(ApiUrl, content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+                string errorMsg = $"Falha na API de email - Status: {response.StatusCode}, Resposta: {responseContent}";
+                return (false, errorMsg);
+            }
+
+            return (true, string.Empty);
         }
-    }
-
-
-    // Importante: Implementar IDisposable para liberar recursos do HttpClient
-    public void Dispose()
-    {
-        _httpClient?.Dispose();
+        catch (HttpRequestException ex)
+        {
+            string errorMsg = $"Erro de conexão com API de email: {ex.Message}";
+            return (false, errorMsg);
+        }
+        catch (TaskCanceledException ex)
+        {
+            string errorMsg = $"Timeout na API de email: {ex.Message}";
+            return (false, errorMsg);
+        }
+        catch (Exception ex)
+        {
+            // Lança exceção para erros inesperados
+            throw new InvalidOperationException($"Erro inesperado na API de email: {ex.Message}", ex);
+        }
     }
 }

@@ -28,10 +28,10 @@ public class WishListService
 
         User user = await _userRepository.FindUserById(userid);
 
-        WishList wishList = await _wishListRepository.FindByUserIdAndAppId(userid, game.appId);
+        WishGame wishGame = await _wishListRepository.FindByUserIdAndAppId(userid, game.appId);
 
         //tratar jogo repetido
-        if (wishList != null)
+        if (wishGame != null)
         {
             return "Esse jogo ja foi adcionado na sua WishList";
         }
@@ -42,12 +42,12 @@ public class WishListService
             return "Você atingiu o limite de jogos na WishList!";
         }
 
-        WishList wishlist = new WishList
+        WishGame wishlist = new WishGame
         {
-            userId = userid,
-            nameGame = game.nameGame,
-            idGame = game.appId,
-            discount = 0
+            UserId = userid,
+            NameGame = game.nameGame,
+            GameId = game.appId,
+            Discount = 0
         };
 
         await _wishListRepository.Add(wishlist);

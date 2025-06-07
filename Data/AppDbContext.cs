@@ -10,7 +10,7 @@ namespace APISTEAMSTATS.data
         public DbSet<GameList> games { get; set; }
         public DbSet<User> users {get; set;}
         
-        public DbSet<WishList> wishlists {get; set;}
+        public DbSet<WishGame> wishlists {get; set;}
 
     }
 }

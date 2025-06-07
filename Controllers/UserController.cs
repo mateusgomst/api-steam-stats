@@ -31,12 +31,12 @@ namespace APISTEAMSTATS.controllers
             };
 
             var loginUser = await _userService.Login(user);
-    
+
             if (loginUser == null)
             {
                 return Unauthorized("Login ou senha inválidos.");
             }
-            
+
             var token = _tokenService.GenerateToken(loginUser);
 
 
@@ -63,13 +63,13 @@ namespace APISTEAMSTATS.controllers
 
             return CreatedAtAction(nameof(registerUser), new { id = newUser.Id }, responseDto);
         }
-        
+
         [Authorize]
         [HttpGet("me")]
         public IActionResult GetMe()
         {
             // Pega o claim do usuário logado (lembrando que no seu token você usou JwtRegisteredClaimNames.Sub)
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                          ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 
             if (userId == null)
@@ -77,7 +77,5 @@ namespace APISTEAMSTATS.controllers
 
             return Ok($"Você está autenticado. ID: {userId}");
         }
-
-
     }
 }

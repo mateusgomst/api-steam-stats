@@ -75,7 +75,7 @@ namespace apisteamstats.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("APISTEAMSTATS.models.WishList", b =>
+            modelBuilder.Entity("APISTEAMSTATS.models.WishGame", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,17 +83,17 @@ namespace apisteamstats.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("discount")
+                    b.Property<int>("Discount")
                         .HasColumnType("integer");
 
-                    b.Property<int>("idGame")
+                    b.Property<int>("GameId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("nameGame")
+                    b.Property<string>("NameGame")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("userId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

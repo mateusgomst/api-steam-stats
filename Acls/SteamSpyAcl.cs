@@ -1,35 +1,63 @@
+using System;
+using System.Net.Http;
 using System.Text.Json;
-using APISTEAMSTATS.data;
+using System.Threading.Tasks;
 
-namespace APISTEAMSTATS.services;
-
+namespace APISTEAMSTATS.services
+{
     public class SteamSpyAcl
     {
-        
         private readonly HttpClient _httpClient;
-        private string urlGetAllGames = "https://steamspy.com/api.php?request=all";
+        private readonly string urlGetAllGames = "https://steamspy.com/api.php?request=all";
 
         public SteamSpyAcl()
         {
             _httpClient = new HttpClient();
         }
 
-        public async Task<JsonDocument> GetAllGames()
+        public async Task<(bool Success, JsonDocument? Data, string ErrorMessage)> GetAllGames()
         {
             try
             {
                 HttpResponseMessage response = await _httpClient.GetAsync(urlGetAllGames);
-                response.EnsureSuccessStatusCode();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    string errorMsg =
+                        $"API SteamSpy retornou erro - Status: {response.StatusCode}, Reason: {response.ReasonPhrase}";
+                    return (false, null, errorMsg);
+                }
 
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                JsonDocument doc = JsonDocument.Parse(responseBody);
+                if (string.IsNullOrWhiteSpace(responseBody))
+                {
+                    return (false, null, "API SteamSpy retornou resposta vazia");
+                }
 
-                return doc;
+                JsonDocument doc = JsonDocument.Parse(responseBody);
+                return (true, doc, string.Empty);
             }
-            catch (HttpRequestException e)
+            catch (HttpRequestException ex)
             {
-                throw new Exception("Erro ao obter jogos da API SteamSpy: " + e.Message);
+                string errorMsg = $"Erro de conexão com SteamSpy API: {ex.Message}";
+                return (false, null, errorMsg);
+            }
+            catch (TaskCanceledException ex)
+            {
+                string errorMsg = $"Timeout na SteamSpy API: {ex.Message}";
+                return (false, null, errorMsg);
+            }
+            catch (JsonException ex)
+            {
+                string errorMsg = $"Erro ao processar JSON da SteamSpy API: {ex.Message}";
+                return (false, null, errorMsg);
+            }
+            catch (Exception ex)
+            {
+                // Lança exceção para erros inesperados
+                throw new InvalidOperationException($"Erro inesperado na SteamSpy API: {ex.Message}", ex);
             }
         }
     }
+}

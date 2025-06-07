@@ -13,25 +13,25 @@ public class WishListRepository
         _appDbContext = appDbContext;
     }
 
-    public async Task Add(WishList wishlist)
+    public async Task Add(WishGame wishlist)
     {
         await _appDbContext.wishlists.AddAsync(wishlist);
         await _appDbContext.SaveChangesAsync();
     }
 
-    public async Task<WishList?> FindByUserIdAndAppId(int userId, int appId)
+    public async Task<WishGame?> FindByUserIdAndAppId(int userId, int appId)
     {
         return await _appDbContext.wishlists
-            .FirstOrDefaultAsync(w => w.userId == userId && w.idGame == appId);
+            .FirstOrDefaultAsync(w => w.UserId == userId && w.GameId == appId);
     }
 
-    public async Task Remove(WishList wishlist)
+    public async Task Remove(WishGame wishlist)
     {
         _appDbContext.wishlists.Remove(wishlist);
         await _appDbContext.SaveChangesAsync();
     }
 
-    public async Task<List<WishList>> GetAllWishList()
+    public async Task<List<WishGame>> GetAllWishList()
     {
         return await _appDbContext.wishlists.ToListAsync();
     }

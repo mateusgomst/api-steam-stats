@@ -6,7 +6,7 @@ namespace APISTEAMSTATS.models
         public string nameGame { get; set; }
         public int appId { get; set; }
         public int positive { get; set; }
-        
+
         public int discount { get; set; }
     }
 }
