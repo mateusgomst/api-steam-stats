@@ -22,14 +22,14 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connect
 // ---------------------------
 // Registro de dependências
 // ---------------------------
-builder.Services.AddScoped<GameListService>();
+builder.Services.AddScoped<GameService>();
 builder.Services.AddScoped<SteamSpyAcl>();
-builder.Services.AddScoped<GameListRepository>();
+builder.Services.AddScoped<GameRepository>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<WishListService>();
-builder.Services.AddScoped<WishListRepository>();
+builder.Services.AddScoped<WishGameService>();
+builder.Services.AddScoped<WishGameRepository>();
 builder.Services.AddScoped<DailyTaskService>();     // Serviço usado na job
 builder.Services.AddScoped<EmailAcl>();
 

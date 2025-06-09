@@ -8,18 +8,18 @@ using APISTEAMSTATS.services;
 
 public class DailyTaskService
 {
-    private readonly GameListService _gameListService;
-    private readonly WishListRepository _wishListRepository;
-    private readonly GameListRepository _gameListRepository;
+    private readonly GameService _gameService;
+    private readonly WishGameRepository _wishGameRepository;
+    private readonly GameRepository _gameRepository;
     private readonly EmailAcl _emailAcl;
     private readonly UserRepository _userRepository;
 
-    public DailyTaskService(GameListService gameListService, WishListRepository wishListRepository,
-        GameListRepository gameListRepository, EmailAcl emailAcl, UserRepository userRepository)
+    public DailyTaskService(GameService gameService, WishGameRepository wishGameRepository,
+        GameRepository gameRepository, EmailAcl emailAcl, UserRepository userRepository)
     {
-        _gameListService = gameListService;
-        _wishListRepository = wishListRepository;
-        _gameListRepository = gameListRepository;
+        _gameService = gameService;
+        _wishGameRepository = wishGameRepository;
+        _gameRepository = gameRepository;
         _emailAcl = emailAcl;
         _userRepository = userRepository;
     }
@@ -31,7 +31,7 @@ public class DailyTaskService
             Console.WriteLine("[INFO] Iniciando tarefa diária de verificação de promoções...");
 
             // Primeiro atualiza a lista de jogos
-            var (uploadSuccess, uploadError) = await _gameListService.UploadAllGames();
+            var (uploadSuccess, uploadError) = await _gameService.UploadAllGames();
 
             if (!uploadSuccess)
             {
@@ -39,7 +39,7 @@ public class DailyTaskService
                 return false;
             }
 
-            List<WishGame> wishList = await _wishListRepository.GetAllWishList();
+            List<WishGame> wishList = await _wishGameRepository.GetAllWishList();
 
             if (!wishList.Any())
             {
@@ -55,10 +55,10 @@ public class DailyTaskService
             {
                 try
                 {
-                    int appId = wish.GameId;
+                    int appId = wish.AppId;
                     int wishDiscount = wish.Discount;
 
-                    GameList game = await _gameListRepository.FindGameByAppidPrimaryKey(appId);
+                    Game game = await _gameRepository.FindGameByAppidPrimaryKey(appId);
 
                     if (game == null)
                     {
@@ -66,7 +66,7 @@ public class DailyTaskService
                         continue;
                     }
 
-                    if (game.discount > wishDiscount)
+                    if (game.Discount > wishDiscount)
                     {
                         User user = await _userRepository.FindUserById(wish.UserId);
 
@@ -77,23 +77,23 @@ public class DailyTaskService
                         }
 
                         var (success, errorMessage) = await _emailAcl.SendPromotionEmail(
-                            toEmail: user.login,
-                            gameName: game.nameGame,
-                            discount: game.discount,
-                            appid: game.appId
+                            toEmail: user.Login,
+                            gameName: game.NameGame,
+                            discount: game.Discount,
+                            appid: game.AppId
                         );
 
                         if (success)
                         {
                             emailsEnviados++;
                             Console.WriteLine(
-                                $"[SUCCESS] E-mail enviado para {user.login} - Jogo: {game.nameGame} ({game.discount}% desconto)");
+                                $"[SUCCESS] E-mail enviado para {user.Login} - Jogo: {game.NameGame} ({game.Discount}% desconto)");
                         }
                         else
                         {
                             emailsFalharam++;
                             string erro =
-                                $"Falha ao enviar e-mail para {user.login} - Jogo: {game.nameGame}. Motivo: {errorMessage}";
+                                $"Falha ao enviar e-mail para {user.Login} - Jogo: {game.NameGame}. Motivo: {errorMessage}";
                             errosDetalhados.Add(erro);
                             Console.WriteLine($"[ERROR] {erro}");
                         }
@@ -103,7 +103,7 @@ public class DailyTaskService
                 {
                     emailsFalharam++;
                     string erro =
-                        $"Erro ao processar wish do usuário {wish.UserId} para o jogo {wish.GameId}: {ex.Message}";
+                        $"Erro ao processar wish do usuário {wish.UserId} para o jogo {wish.AppId}: {ex.Message}";
                     errosDetalhados.Add(erro);
                     Console.WriteLine($"[ERROR] {erro}");
                 }

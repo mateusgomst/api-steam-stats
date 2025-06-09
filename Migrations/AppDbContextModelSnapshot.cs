@@ -21,7 +21,7 @@ namespace apisteamstats.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("APISTEAMSTATS.models.GameList", b =>
+            modelBuilder.Entity("APISTEAMSTATS.models.Game", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -29,17 +29,17 @@ namespace apisteamstats.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("appId")
+                    b.Property<int>("AppId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("discount")
+                    b.Property<int>("Discount")
                         .HasColumnType("integer");
 
-                    b.Property<string>("nameGame")
+                    b.Property<string>("NameGame")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("positive")
+                    b.Property<int>("Positive")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -55,18 +55,18 @@ namespace apisteamstats.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("countListGames")
+                    b.Property<int>("CountListGames")
                         .HasColumnType("integer");
 
-                    b.Property<string>("login")
+                    b.Property<string>("Login")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("password")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -83,10 +83,10 @@ namespace apisteamstats.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Discount")
+                    b.Property<int>("AppId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("GameId")
+                    b.Property<int>("Discount")
                         .HasColumnType("integer");
 
                     b.Property<string>("NameGame")

@@ -4,35 +4,35 @@ using Microsoft.EntityFrameworkCore;
 
 namespace APISTEAMSTATS.repository
 {
-    public class GameListRepository
+    public class GameRepository
     {
         private readonly AppDbContext _appDbContext;
 
-        public GameListRepository(AppDbContext appDbContext)
+        public GameRepository(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
         }
 
-        public async Task<List<GameList>> GetAllGames()
+        public async Task<List<Game>> GetAllGames()
         {
-            List<GameList> gameList = await _appDbContext.games.ToListAsync();
+            List<Game> gameList = await _appDbContext.games.ToListAsync();
             return gameList;
         }
 
-        public async Task UpdateGamesDiscount(List<GameList> gamesToUpdate)
+        public async Task UpdateGamesDiscount(List<Game> gamesToUpdate)
         {
             _appDbContext.games.UpdateRange(gamesToUpdate);
             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task<GameList?> FindGameByAppidPrimaryKey(int appid)
+        public async Task<Game?> FindGameByAppidPrimaryKey(int appid)
         {
             var existingGame = await _appDbContext.games
-                .FirstOrDefaultAsync(g => g.appId == appid);
+                .FirstOrDefaultAsync(g => g.AppId == appid);
             return existingGame;
         }
 
-        public async Task AddListInGames(List<GameList> gameList)
+        public async Task AddListInGames(List<Game> gameList)
         {
             _appDbContext.games.AddRange(gameList);
             await _appDbContext.SaveChangesAsync();

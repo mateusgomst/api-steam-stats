@@ -7,7 +7,7 @@ namespace APISTEAMSTATS.data
     {
         public AppDbContext(DbContextOptions options) : base(options) { }
 
-        public DbSet<GameList> games { get; set; }
+        public DbSet<Game> games { get; set; }
         public DbSet<User> users {get; set;}
         
         public DbSet<WishGame> wishlists {get; set;}

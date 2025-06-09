@@ -8,12 +8,12 @@ namespace APISTEAMSTATS.controllers
     [Route("games")]
     public class GamesController : ControllerBase
     {
-        private readonly GameListService _gameListService;
+        private readonly GameService _gameService;
         private readonly DailyTaskService _dailyTaskService;
 
-        public GamesController(GameListService gameListService, DailyTaskService dailyTaskService)
+        public GamesController(GameService gameService, DailyTaskService dailyTaskService)
         {
-            _gameListService = gameListService;
+            _gameService = gameService;
             _dailyTaskService = dailyTaskService;
         }
 
@@ -29,9 +29,9 @@ namespace APISTEAMSTATS.controllers
         }
 */
         [HttpGet]
-        public async Task<ActionResult<List<GameList>>> GameList()
+        public async Task<ActionResult<List<Game>>> GameList()
         {
-            var games = await _gameListService.GetAllGames();
+            var games = await _gameService.GetAllGames();
             return Ok(games);
         }
     }

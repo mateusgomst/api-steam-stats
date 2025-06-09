@@ -15,7 +15,7 @@ namespace APISTEAMSTATS.repository
 
         public async Task<User?> FindUser(User user)
         {
-            var userFound = await _appDbContext.users.FirstOrDefaultAsync(u => u.login == user.login);
+            var userFound = await _appDbContext.users.FirstOrDefaultAsync(u => u.Login == user.Login);
             return userFound;
         }
 
@@ -35,14 +35,14 @@ namespace APISTEAMSTATS.repository
         public async Task IncrementCountListGameByUserId(int userId)
         {
             var user = await _appDbContext.users.FirstOrDefaultAsync(u => u.Id == userId);
-            user.countListGames += 1;
+            user.CountListGames += 1;
             await _appDbContext.SaveChangesAsync();
         }
 
         public async Task DecrementCountListGameByUserId(int userId)
         {
             var user = await _appDbContext.users.FirstOrDefaultAsync(u => u.Id == userId);
-            user.countListGames -= 1;
+            user.CountListGames -= 1;
             await _appDbContext.SaveChangesAsync();
         }
 

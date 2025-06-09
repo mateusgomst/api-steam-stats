@@ -28,7 +28,7 @@ public class TokenService
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.UniqueName, user.login)
+            new Claim(JwtRegisteredClaimNames.UniqueName, user.Login)
         };
 
         // 4. Cria o token

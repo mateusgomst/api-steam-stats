@@ -8,15 +8,15 @@ using APISTEAMSTATS.repository;
 
 namespace APISTEAMSTATS.services
 {
-    public class GameListService
+    public class GameService
     {
         private readonly SteamSpyAcl _steamSpyAcl;
-        private readonly GameListRepository _gameListRepository;
+        private readonly GameRepository _gameRepository;
 
-        public GameListService(SteamSpyAcl steamSpyAcl, GameListRepository gameListRepository)
+        public GameService(SteamSpyAcl steamSpyAcl, GameRepository gameRepository)
         {
             _steamSpyAcl = steamSpyAcl;
-            _gameListRepository = gameListRepository;
+            _gameRepository = gameRepository;
         }
 
         public async Task<(bool Success, string ErrorMessage)> UploadAllGames()
@@ -33,11 +33,11 @@ namespace APISTEAMSTATS.services
                 }
 
                 var allGames = allGamesDocument.RootElement;
-                var existingGames = await _gameListRepository.GetAllGames();
-                var existingGameDict = existingGames.ToDictionary(g => g.appId);
+                var existingGames = await _gameRepository.GetAllGames();
+                var existingGameDict = existingGames.ToDictionary(g => g.AppId);
 
-                var newGames = new List<GameList>();
-                var gamesToUpdate = new List<GameList>();
+                var newGames = new List<Game>();
+                var gamesToUpdate = new List<Game>();
 
                 foreach (var jogo in allGames.EnumerateObject())
                 {
@@ -50,29 +50,29 @@ namespace APISTEAMSTATS.services
 
                     if (existingGameDict.TryGetValue(appid, out var existingGame))
                     {
-                        if (existingGame.discount != discount)
+                        if (existingGame.Discount != discount)
                         {
-                            existingGame.discount = discount;
+                            existingGame.Discount = discount;
                             gamesToUpdate.Add(existingGame);
                         }
                     }
                     else
                     {
-                        newGames.Add(new GameList
+                        newGames.Add(new Game
                         {
-                            appId = appid,
-                            nameGame = name,
-                            positive = positive,
-                            discount = discount
+                            AppId = appid,
+                            NameGame = name,
+                            Positive = positive,
+                            Discount = discount
                         });
                     }
                 }
 
                 if (newGames.Any())
-                    await _gameListRepository.AddListInGames(newGames);
+                    await _gameRepository.AddListInGames(newGames);
 
                 if (gamesToUpdate.Any())
-                    await _gameListRepository.UpdateGamesDiscount(gamesToUpdate);
+                    await _gameRepository.UpdateGamesDiscount(gamesToUpdate);
 
                 Console.WriteLine("[SUCCESS] Sincronização concluída");
                 return (true, string.Empty);
@@ -84,9 +84,9 @@ namespace APISTEAMSTATS.services
             }
         }
 
-        public async Task<List<GameList>> GetAllGames()
+        public async Task<List<Game>> GetAllGames()
         {
-            return await _gameListRepository.GetAllGames();
+            return await _gameRepository.GetAllGames();
         }
     }
 }

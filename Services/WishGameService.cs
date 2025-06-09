@@ -3,24 +3,24 @@ using APISTEAMSTATS.repository;
 
 namespace APISTEAMSTATS.services;
 
-public class WishListService
+public class WishGameService
 {
-    private readonly WishListRepository _wishListRepository;
-    private readonly GameListRepository _gameListRepository;
+    private readonly WishGameRepository _wishGameRepository;
+    private readonly GameRepository _gameRepository;
     private readonly UserRepository _userRepository;
 
-    public WishListService(WishListRepository wishListRepository, GameListRepository gameListRepository, UserRepository userRepository)
+    public WishGameService(WishGameRepository wishGameRepository, GameRepository gameRepository, UserRepository userRepository)
     {
-        _wishListRepository = wishListRepository;
-        _gameListRepository = gameListRepository;
+        _wishGameRepository = wishGameRepository;
+        _gameRepository = gameRepository;
         _userRepository = userRepository;
     }
 
-    public async Task<string> AddGame(int userid, GameList game)
+    public async Task<string> AddGame(int userid, Game game)
     {
 
         // ver se o jogo que vai ser adicionado existe na gameList
-        GameList findGame = await _gameListRepository.FindGameByAppidPrimaryKey(game.appId);
+        Game findGame = await _gameRepository.FindGameByAppidPrimaryKey(game.AppId);
         if (findGame == null)
         {
             return "Jogo não existe!"; 
@@ -28,7 +28,7 @@ public class WishListService
 
         User user = await _userRepository.FindUserById(userid);
 
-        WishGame wishGame = await _wishListRepository.FindByUserIdAndAppId(userid, game.appId);
+        WishGame wishGame = await _wishGameRepository.FindByUserIdAndAppId(userid, game.AppId);
 
         //tratar jogo repetido
         if (wishGame != null)
@@ -37,7 +37,7 @@ public class WishListService
         }
         
         //tratar limite de jogos na wishlist
-        if (user.countListGames >= 10)
+        if (user.CountListGames >= 10)
         {
             return "Você atingiu o limite de jogos na WishList!";
         }
@@ -45,22 +45,27 @@ public class WishListService
         WishGame wishlist = new WishGame
         {
             UserId = userid,
-            NameGame = game.nameGame,
-            GameId = game.appId,
+            NameGame = game.NameGame,
+            AppId = game.AppId,
             Discount = 0
         };
 
-        await _wishListRepository.Add(wishlist);
+        await _wishGameRepository.Add(wishlist);
         await _userRepository.IncrementCountListGameByUserId(userid);
         return "";
     }
      
     public async Task RemoveGame(int userId, int appId)
     {
-        var wishListItem = await _wishListRepository.FindByUserIdAndAppId(userId, appId);
+        var wishListItem = await _wishGameRepository.FindByUserIdAndAppId(userId, appId);
         if (wishListItem == null) throw new Exception("Jogo não encontrado na wishlist.");
         await _userRepository.DecrementCountListGameByUserId(userId);
-        await _wishListRepository.Remove(wishListItem);
+        await _wishGameRepository.Remove(wishListItem);
+    }
+
+    public async Task<List<WishGame>> GetAllGamesByUserId(int userId)
+    {
+        return await _wishGameRepository.GetAllWishGamesByUserId(userId);
     }
 
 }

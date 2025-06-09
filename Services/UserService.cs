@@ -20,8 +20,8 @@ namespace APISTEAMSTATS.services
             {
                 return null;
             }
-            user.countListGames = 0;
-            user.password = BCrypt.Net.BCrypt.HashPassword(user.password);
+            user.CountListGames = 0;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
 
             await _userRepository.AddUser(user);
@@ -37,7 +37,7 @@ namespace APISTEAMSTATS.services
             }
             user.Id=userFound.Id;
             
-            bool success = BCrypt.Net.BCrypt.Verify(user.password, userFound.password);
+            bool success = BCrypt.Net.BCrypt.Verify(user.Password, userFound.Password);
             if (!success)
             {
                 return null;

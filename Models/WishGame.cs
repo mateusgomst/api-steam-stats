@@ -8,7 +8,7 @@ public class WishGame
     
     public string NameGame { get; set; }
     
-    public int GameId { get; set; }
+    public int AppId { get; set; }
     
     public int Discount { get; set; }
 }

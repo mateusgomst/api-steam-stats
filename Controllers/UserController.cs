@@ -26,8 +26,8 @@ namespace APISTEAMSTATS.controllers
         {
             var user = new User
             {
-                login = userDto.login,
-                password = userDto.password
+                Login = userDto.login,
+                Password = userDto.password
             };
 
             var loginUser = await _userService.Login(user);
@@ -57,8 +57,8 @@ namespace APISTEAMSTATS.controllers
             UserResponseDto responseDto = new UserResponseDto
             {
                 Id = newUser.Id,
-                Name = newUser.name,
-                Login = newUser.login
+                Name = newUser.Name,
+                Login = newUser.Login
             };
 
             return CreatedAtAction(nameof(registerUser), new { id = newUser.Id }, responseDto);

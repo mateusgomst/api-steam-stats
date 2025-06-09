@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace APISTEAMSTATS.repository;
 
-public class WishListRepository
+public class WishGameRepository
 {
     private readonly AppDbContext _appDbContext;
 
-    public WishListRepository(AppDbContext appDbContext)
+    public WishGameRepository(AppDbContext appDbContext)
     {
         _appDbContext = appDbContext;
     }
@@ -22,7 +22,7 @@ public class WishListRepository
     public async Task<WishGame?> FindByUserIdAndAppId(int userId, int appId)
     {
         return await _appDbContext.wishlists
-            .FirstOrDefaultAsync(w => w.UserId == userId && w.GameId == appId);
+            .FirstOrDefaultAsync(w => w.UserId == userId && w.AppId == appId);
     }
 
     public async Task Remove(WishGame wishlist)
@@ -34,6 +34,11 @@ public class WishListRepository
     public async Task<List<WishGame>> GetAllWishList()
     {
         return await _appDbContext.wishlists.ToListAsync();
+    }
+
+    public async Task<List<WishGame>> GetAllWishGamesByUserId(int userId)
+    {
+        return await _appDbContext.wishlists.Where(w => w.UserId == userId).ToListAsync();
     }
 
     
