@@ -8,12 +8,23 @@ using APISTEAMSTATS.models;
 public class TokenService
 {
     private readonly string _secretKey;
+    private readonly string _issuer;
+    private readonly string _audience;
     private readonly int _expirationMinutes;
 
-    public TokenService(IConfiguration configuration)
+    public TokenService()
     {
-        _secretKey = configuration["Jwt:Key"];
-        _expirationMinutes = 1440;
+        // Busca as variáveis de ambiente diretamente
+        _secretKey = Environment.GetEnvironmentVariable("JWT_KEY") 
+            ?? throw new InvalidOperationException("JWT_KEY não encontrada nas variáveis de ambiente!");
+        
+        _issuer = Environment.GetEnvironmentVariable("JWT_ISSUER") 
+            ?? throw new InvalidOperationException("JWT_ISSUER não encontrada nas variáveis de ambiente!");
+        
+        _audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") 
+            ?? throw new InvalidOperationException("JWT_AUDIENCE não encontrada nas variáveis de ambiente!");
+        
+        _expirationMinutes = 1440; // 24 horas
     }
 
     public string GenerateToken(User user)
@@ -31,10 +42,10 @@ public class TokenService
             new Claim(JwtRegisteredClaimNames.UniqueName, user.Login)
         };
 
-        // 4. Cria o token
+        // 4. Cria o token usando as variáveis de ambiente
         var token = new JwtSecurityToken(
-            issuer: "apisteamstats",              // quem emitiu
-            audience: "apisteamstats_client",     // quem consome
+            issuer: _issuer,
+            audience: _audience,
             claims: claims,
             expires: DateTime.UtcNow.AddMinutes(_expirationMinutes),
             signingCredentials: credentials
