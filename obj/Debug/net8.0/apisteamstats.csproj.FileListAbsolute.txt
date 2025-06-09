@@ -304,3 +304,5 @@ C:/Users/mateu/Documents/api-steam-stats/obj/Debug/net8.0/ref/apisteamstats.dll
 /Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/Quartz.dll
 /Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/Quartz.Extensions.DependencyInjection.dll
 /Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/Quartz.Extensions.Hosting.dll
+/Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/DotNetEnv.dll
+/Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/Sprache.dll

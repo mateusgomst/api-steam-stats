@@ -8,14 +8,49 @@ using System.Threading.Tasks;
 public class EmailAcl
 {
     private readonly HttpClient _httpClient;
-    private const string ApiUrl = "https://api.mailersend.com/v1/email";
-    private const string ApiToken = "mlsn.918f8c0e05c515ccd8b4c3ef6c09e9413fc4e0aae8b7d5296f0112f1221f639b";
+    private readonly string _apiUrl;
+    private readonly string _apiToken;
+    private readonly string _fromEmail;
+    private readonly string _fromName;
 
     public EmailAcl()
     {
+        // Carrega as configurações APENAS das variáveis de ambiente
+        _apiUrl = Environment.GetEnvironmentVariable("MAILERSEND_API_URL");
+        _apiToken = Environment.GetEnvironmentVariable("MAILERSEND_API_TOKEN");
+        _fromEmail = Environment.GetEnvironmentVariable("EMAIL_FROM_ADDRESS");
+        _fromName = Environment.GetEnvironmentVariable("EMAIL_FROM_NAME") ?? "Steam Stats Notifier";
+
+        // Valida se as configurações obrigatórias estão presentes
+        if (string.IsNullOrEmpty(_apiUrl))
+        {
+            Console.WriteLine("ERRO: MAILERSEND_API_URL não foi configurada no .env");
+            return;
+        }
+        
+        if (string.IsNullOrEmpty(_apiToken))
+        {
+            Console.WriteLine("ERRO: MAILERSEND_API_TOKEN não foi configurada no .env");
+            return;
+        }
+        
+        if (string.IsNullOrEmpty(_fromEmail))
+        {
+            Console.WriteLine("ERRO: EMAIL_FROM_ADDRESS não foi configurada no .env");
+            return;
+        }
+
+        // Configura o HttpClient
         _httpClient = new HttpClient();
+        
+        // Configura timeout se especificado
+        if (int.TryParse(Environment.GetEnvironmentVariable("EMAIL_TIMEOUT_SECONDS"), out int timeoutSeconds))
+        {
+            _httpClient.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
+        }
+        
         _httpClient.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ApiToken);
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiToken);
     }
 
     public async Task<(bool Success, string ErrorMessage)> SendPromotionEmail(string toEmail, string gameName, int discount, int appid)
@@ -24,8 +59,8 @@ public class EmailAcl
         {
             from = new
             {
-                email = "steamstats@test-2p0347z82r7lzdrn.mlsender.net",
-                name = "Steam Stats Notifier"
+                email = _fromEmail,
+                name = _fromName
             },
             to = new[]
             {
@@ -52,7 +87,7 @@ public class EmailAcl
             string json = JsonSerializer.Serialize(emailContent);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync(ApiUrl, content);
+            var response = await _httpClient.PostAsync(_apiUrl, content);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -78,5 +113,11 @@ public class EmailAcl
             // Lança exceção para erros inesperados
             throw new InvalidOperationException($"Erro inesperado na API de email: {ex.Message}", ex);
         }
+    }
+
+    // Implementa IDisposable para liberar recursos do HttpClient
+    public void Dispose()
+    {
+        _httpClient?.Dispose();
     }
 }

@@ -8,11 +8,14 @@ namespace APISTEAMSTATS.services
     public class SteamSpyAcl
     {
         private readonly HttpClient _httpClient;
-        private readonly string urlGetAllGames = "https://steamspy.com/api.php?request=all";
+        private readonly string urlGetAllGames;
 
         public SteamSpyAcl()
         {
             _httpClient = new HttpClient();
+
+            urlGetAllGames = Environment.GetEnvironmentVariable("STEAMSPY_API_URL")
+                ?? throw new InvalidOperationException("Variável de ambiente STEAMSPY_API_URL não definida.");
         }
 
         public async Task<(bool Success, JsonDocument? Data, string ErrorMessage)> GetAllGames()
@@ -55,7 +58,6 @@ namespace APISTEAMSTATS.services
             }
             catch (Exception ex)
             {
-                // Lança exceção para erros inesperados
                 throw new InvalidOperationException($"Erro inesperado na SteamSpy API: {ex.Message}", ex);
             }
         }
