@@ -18,7 +18,7 @@ namespace APISTEAMSTATS.services
             _steamSpyAcl = steamSpyAcl;
             _gameRepository = gameRepository;
         }
-
+        
         public async Task<(bool Success, string ErrorMessage)> UploadAllGames()
         {
             try
@@ -84,6 +84,11 @@ namespace APISTEAMSTATS.services
             }
         }
 
+        public async Task<List<Game>> GetAllGamesByName(string name)
+        {
+            return await _gameRepository.GetGamesByNameAsync(name);
+        }
+        
         public async Task<List<Game>> GetAllGames()
         {
             return await _gameRepository.GetAllGames();

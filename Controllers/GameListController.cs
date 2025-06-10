@@ -34,5 +34,15 @@ namespace APISTEAMSTATS.controllers
             var games = await _gameService.GetAllGames();
             return Ok(games);
         }
+
+
+        [HttpGet("{name}")]
+        public async Task<ActionResult<List<Game>>> SearchGamesByName([FromRoute] string name)
+        {
+            var games = await _gameService.GetAllGamesByName(name);
+            return Ok(games);
+        }
+
+        
     }
 }

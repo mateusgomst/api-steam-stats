@@ -13,6 +13,16 @@ namespace APISTEAMSTATS.repository
             _appDbContext = appDbContext;
         }
 
+        public async Task<List<Game>> GetGamesByNameAsync(string name)
+        {
+            var games = await _appDbContext.games
+                .Where(g => g.NameGame.Contains(name)) // Busca por nome "parecido"
+                .ToListAsync();
+
+            return games;
+        }
+
+
         public async Task<List<Game>> GetAllGames()
         {
             List<Game> gameList = await _appDbContext.games.ToListAsync();
