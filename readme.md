@@ -61,10 +61,8 @@ O banco de dados é executado dentro de um container Docker, então você **não
 Use o comando abaixo para acessar o banco diretamente no terminal:
 
 ```bash
-docker exec -it <nome-do-container> bash
+docker exec -it db_api_steam_stats bash
 psql -U postgres -d postgres
 ```
-
-Substitua `<nome-do-container>` pelo nome do container que está rodando o PostgreSQL (veja com `docker ps`).
 
 ---
