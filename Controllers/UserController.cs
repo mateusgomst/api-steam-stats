@@ -63,19 +63,6 @@ namespace APISTEAMSTATS.controllers
 
             return CreatedAtAction(nameof(registerUser), new { id = newUser.Id }, responseDto);
         }
-
-        [Authorize]
-        [HttpGet("me")]
-        public IActionResult GetMe()
-        {
-            // Pega o claim do usuário logado (lembrando que no seu token você usou JwtRegisteredClaimNames.Sub)
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                         ?? User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-
-            if (userId == null)
-                return Unauthorized("Usuário não autenticado");
-
-            return Ok($"Você está autenticado. ID: {userId}");
-        }
+        
     }
 }
