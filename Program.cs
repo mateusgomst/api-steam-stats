@@ -25,7 +25,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 // ---------------------------
-// Banco de Dados
+// Banco de Dados - Neon PostgreSQL
 // ---------------------------
 var connection = Environment.GetEnvironmentVariable("DB_CONNECTION");
 if (string.IsNullOrEmpty(connection))
@@ -34,7 +34,26 @@ if (string.IsNullOrEmpty(connection))
 }
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connection));
+{
+    options.UseNpgsql(connection, npgsqlOptions =>
+    {
+        // Configurações específicas para Neon
+        npgsqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 3,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorCodesToAdd: null);
+        
+        // Timeout para comandos
+        npgsqlOptions.CommandTimeout(30);
+    });
+    
+    // Habilitar logging sensível apenas em desenvolvimento
+    if (builder.Environment.IsDevelopment())
+    {
+        options.EnableSensitiveDataLogging();
+        options.LogTo(Console.WriteLine, LogLevel.Information);
+    }
+});
 
 // ---------------------------
 // Registro de dependências
@@ -76,9 +95,10 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins("http://localhost:4200", "https://steamstats-*.vercel.app")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -122,6 +142,43 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 // ---------------------------
+// Aplicar migrações automaticamente (apenas em desenvolvimento)
+// ---------------------------
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        try
+        {
+            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            
+            // Testar conexão
+            await context.Database.CanConnectAsync();
+            Console.WriteLine("✅ Conexão com banco Neon estabelecida com sucesso!");
+            
+            // Aplicar migrações pendentes
+            var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+            if (pendingMigrations.Any())
+            {
+                Console.WriteLine($"📦 Aplicando {pendingMigrations.Count()} migração(ões)...");
+                await context.Database.MigrateAsync();
+                Console.WriteLine("✅ Migrações aplicadas com sucesso!");
+            }
+            else
+            {
+                Console.WriteLine("✅ Banco de dados está atualizado!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Erro ao conectar/migrar banco: {ex.Message}");
+            // Em desenvolvimento, podemos continuar para debugar
+            // Em produção, você pode querer fazer throw aqui
+        }
+    }
+}
+
+// ---------------------------
 // Pipeline HTTP
 // ---------------------------
 if (app.Environment.IsDevelopment())
@@ -130,11 +187,35 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Importante: CORS deve vir antes de Authentication/Authorization
+app.UseCors();
+
 //app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseCors();
+
+// ---------------------------
+// Health Check Endpoint
+// ---------------------------
+app.MapGet("/health", async (AppDbContext context) =>
+{
+    try
+    {
+        await context.Database.CanConnectAsync();
+        return Results.Ok(new { 
+            status = "OK", 
+            database = "Connected",
+            timestamp = DateTime.UtcNow,
+            environment = app.Environment.EnvironmentName
+        });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem($"Database connection failed: {ex.Message}");
+    }
+});
+
 app.Run();
