@@ -89,13 +89,40 @@ builder.Services.AddQuartz(q =>
 });
 
 // --------------------------
-// Configuração do CORS
+// Configuração do CORS - CORRIGIDA
 // --------------------------
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "https://steamstats-*.vercel.app")
+        policy.WithOrigins(
+                "http://localhost:4200",
+                "https://steamstats-silk.vercel.app", // Seu domínio específico
+                "https://steamstats-*.vercel.app" // Pattern para outros subdomínios
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .SetIsOriginAllowedToAllowWildcardSubdomains(); // Permite wildcards
+    });
+    
+    // Política adicional mais permissiva para desenvolvimento/teste
+    options.AddPolicy("AllowVercel", policy =>
+    {
+        policy.SetIsOriginAllowed(origin =>
+            {
+                if (string.IsNullOrEmpty(origin)) return false;
+                
+                // Permite localhost para desenvolvimento
+                if (origin.StartsWith("http://localhost") || origin.StartsWith("https://localhost"))
+                    return true;
+                
+                // Permite qualquer subdomínio do Vercel
+                if (origin.EndsWith(".vercel.app"))
+                    return true;
+                
+                return false;
+            })
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -179,7 +206,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // ---------------------------
-// Pipeline HTTP
+// Pipeline HTTP - ORDEM CORRIGIDA
 // ---------------------------
 if (app.Environment.IsDevelopment())
 {
@@ -187,11 +214,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Importante: CORS deve vir antes de Authentication/Authorization
-app.UseCors();
+// IMPORTANTE: CORS deve ser uma das primeiras coisas no pipeline
+app.UseCors("AllowVercel"); // Usando a política mais permissiva
 
-//app.UseHttpsRedirection();
+// Middleware de roteamento
+app.UseRouting();
 
+// Descomente apenas se estiver usando HTTPS
+// app.UseHttpsRedirection();
+
+// Autenticação e autorização vêm DEPOIS do CORS
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -209,13 +241,20 @@ app.MapGet("/health", async (AppDbContext context) =>
             status = "OK", 
             database = "Connected",
             timestamp = DateTime.UtcNow,
-            environment = app.Environment.EnvironmentName
+            environment = app.Environment.EnvironmentName,
+            cors = "Enabled for Vercel"
         });
     }
     catch (Exception ex)
     {
         return Results.Problem($"Database connection failed: {ex.Message}");
     }
+});
+
+// Endpoint para testar CORS
+app.MapGet("/cors-test", () =>
+{
+    return Results.Ok(new { message = "CORS is working!", timestamp = DateTime.UtcNow });
 });
 
 app.Run();
