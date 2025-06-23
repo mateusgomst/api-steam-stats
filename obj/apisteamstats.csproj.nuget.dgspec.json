@@ -51,6 +51,10 @@
               "target": "Package",
               "version": "[3.1.1, )"
             },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.12.1, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.5, )"

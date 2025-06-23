@@ -306,3 +306,13 @@ C:/Users/mateu/Documents/api-steam-stats/obj/Debug/net8.0/ref/apisteamstats.dll
 /Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/Quartz.Extensions.Hosting.dll
 /Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/DotNetEnv.dll
 /Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/Sprache.dll
+/Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/publish/web.config
+/Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/publish/apisteamstats.deps.json
+/Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/publish/apisteamstats.runtimeconfig.json
+/Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/publish/appsettings.Development.json
+/Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/publish/appsettings.json
+/Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/BouncyCastle.Cryptography.dll
+/Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/MailKit.dll
+/Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/MimeKit.dll
+/Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/System.Security.Cryptography.Pkcs.dll
+/Users/mateusgomes/Documents/api-steam-stats/bin/Debug/net8.0/runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll

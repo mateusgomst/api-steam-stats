@@ -1,78 +1,41 @@
 using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using Microsoft.Extensions.Configuration;
+using MimeKit;
 
-public class EmailAcl
+public class EmailAcl : IDisposable
 {
-    private readonly HttpClient _httpClient;
-    private readonly string _apiUrl;
-    private readonly string _apiToken;
+    private readonly string _smtpHost;
+    private readonly int _smtpPort;
+    private readonly string _smtpUser;
+    private readonly string _smtpPassword;
     private readonly string _fromEmail;
     private readonly string _fromName;
 
-    public EmailAcl()
+    public EmailAcl(IConfiguration configuration)
     {
-        // Carrega as configurações APENAS das variáveis de ambiente
-        _apiUrl = Environment.GetEnvironmentVariable("MAILERSEND_API_URL");
-        _apiToken = Environment.GetEnvironmentVariable("MAILERSEND_API_TOKEN");
-        _fromEmail = Environment.GetEnvironmentVariable("EMAIL_FROM_ADDRESS");
-        _fromName = Environment.GetEnvironmentVariable("EMAIL_FROM_NAME") ?? "Steam Stats Notifier";
-
-        // Valida se as configurações obrigatórias estão presentes
-        if (string.IsNullOrEmpty(_apiUrl))
-        {
-            Console.WriteLine("ERRO: MAILERSEND_API_URL não foi configurada no .env");
-            return;
-        }
-        
-        if (string.IsNullOrEmpty(_apiToken))
-        {
-            Console.WriteLine("ERRO: MAILERSEND_API_TOKEN não foi configurada no .env");
-            return;
-        }
-        
-        if (string.IsNullOrEmpty(_fromEmail))
-        {
-            Console.WriteLine("ERRO: EMAIL_FROM_ADDRESS não foi configurada no .env");
-            return;
-        }
-
-        // Configura o HttpClient
-        _httpClient = new HttpClient();
-        
-        // Configura timeout se especificado
-        if (int.TryParse(Environment.GetEnvironmentVariable("EMAIL_TIMEOUT_SECONDS"), out int timeoutSeconds))
-        {
-            _httpClient.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
-        }
-        
-        _httpClient.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiToken);
+        // Aqui lemos as configs diretamente da configuração (ex: .env ou appsettings)
+        _smtpHost = configuration["SMTP_HOST"] ?? throw new ArgumentNullException("SMTP_HOST");
+        _smtpPort = int.Parse(configuration["SMTP_PORT"] ?? "587");
+        _smtpUser = configuration["SMTP_USERNAME"] ?? throw new ArgumentNullException("SMTP_USERNAME");
+        _smtpPassword = configuration["SMTP_PASSWORD"] ?? throw new ArgumentNullException("SMTP_PASSWORD");
+        _fromEmail = configuration["SMTP_EMAIL_FROM"] ?? throw new ArgumentNullException("SMTP_EMAIL_FROM");
+        _fromName = configuration["SMTP_EMAIL_NAME"] ?? "SteamStats";
     }
 
     public async Task<(bool Success, string ErrorMessage)> SendPromotionEmail(string toEmail, string gameName, int discount, int appid)
     {
-        var emailContent = new
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress(_fromName, _fromEmail));
+        message.To.Add(MailboxAddress.Parse(toEmail));
+        message.Subject = "Um jogo da sua Wish List entrou de promoção!";
+
+        var bodyBuilder = new BodyBuilder
         {
-            from = new
-            {
-                email = _fromEmail,
-                name = _fromName
-            },
-            to = new[]
-            {
-                new
-                {
-                    email = toEmail,
-                    name = "Usuário"
-                }
-            },
-            subject = "Um jogo da sua Wish List entrou de promoção!",
-            text = $"O jogo \"{gameName}\" entrou em promoção com desconto de {discount}%. Aproveite!",
-            html = $@"
+            TextBody = $"O jogo \"{gameName}\" entrou em promoção com desconto de {discount}%. Aproveite!",
+            HtmlBody = $@"
             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;'>
                 <h2 style='color: #333;'>🎮 Promoção na sua Lista de Desejos!</h2>
                 <p style='font-size: 16px; color: #555;'>O jogo <strong>{gameName}</strong> está com um super desconto de <strong style='color: #28a745;'>{discount}%</strong>!</p>
@@ -82,42 +45,26 @@ public class EmailAcl
             </div>"
         };
 
+        message.Body = bodyBuilder.ToMessageBody();
+
         try
         {
-            string json = JsonSerializer.Serialize(emailContent);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            using var smtp = new SmtpClient();
+            await smtp.ConnectAsync(_smtpHost, _smtpPort, SecureSocketOptions.StartTls);
+            await smtp.AuthenticateAsync(_smtpUser, _smtpPassword);
+            await smtp.SendAsync(message);
+            await smtp.DisconnectAsync(true);
 
-            var response = await _httpClient.PostAsync(_apiUrl, content);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                string responseContent = await response.Content.ReadAsStringAsync();
-                string errorMsg = $"Falha na API de email - Status: {response.StatusCode}, Resposta: {responseContent}";
-                return (false, errorMsg);
-            }
-
-            return (true, string.Empty);
-        }
-        catch (HttpRequestException ex)
-        {
-            string errorMsg = $"Erro de conexão com API de email: {ex.Message}";
-            return (false, errorMsg);
-        }
-        catch (TaskCanceledException ex)
-        {
-            string errorMsg = $"Timeout na API de email: {ex.Message}";
-            return (false, errorMsg);
+            return (true, "");
         }
         catch (Exception ex)
         {
-            // Lança exceção para erros inesperados
-            throw new InvalidOperationException($"Erro inesperado na API de email: {ex.Message}", ex);
+            return (false, $"Erro ao enviar e-mail: {ex.Message}");
         }
     }
 
-    // Implementa IDisposable para liberar recursos do HttpClient
     public void Dispose()
     {
-        _httpClient?.Dispose();
+        // Nada a liberar
     }
 }
