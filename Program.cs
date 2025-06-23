@@ -83,7 +83,7 @@ builder.Services.AddQuartz(q =>
         .WithIdentity("DailyJob-trigger")
         .StartNow()
         .WithSimpleSchedule(x => x
-            .WithIntervalInMinutes(1440) // 24 horas
+            .WithIntervalInMinutes(2) // 24 horas
             .RepeatForever())
     );
 });
